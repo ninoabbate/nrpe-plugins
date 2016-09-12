@@ -1,6 +1,10 @@
-# Nagios Plugins
+# NRPE Plugins
 
-This is a collection of my custom Nagios/NRPE compatible plugins.
+This is a collection of my custom NRPE compatible plugins.
+
+- [check_snorby](https://github.com/ninoabbate/nrpe-plugins#check_snorby)
+- [check_container_cpu](https://github.com/ninoabbate/nrpe-plugins#check_container_cpu)
+- [check_container_memory](https://github.com/ninoabbate/nrpe-plugins#check_container_memory)
 
 ## check_snorby
 
