@@ -67,16 +67,16 @@ if [ "$2" = "-w" ] && [ "$3" -gt "0" ] && [ "$4" = "-c" ] && [ "$5" -gt "0" ] ; 
   CPU=$(expr ${CPUUSAGE%%.*} / ${CPUCORES})
 
   if [ $warn -lt ${CPU%%.*} ];then
-     if [ $crit -lt ${CPU%%.*} ]; then
-         echo "CRITICAL - CPU Usage = $CPU%"
-         exit 2
-     else
-         echo "WARNING - CPU Usage = $CPU%"
-         exit 1
-        fi
+    if [ $crit -lt ${CPU%%.*} ]; then
+      echo "CRITICAL - CPU Usage = $CPU%"
+      exit 2
+    else
+      echo "WARNING - CPU Usage = $CPU%"
+      exit 1
+    fi
   else
-     echo "OK - CPU Usage = $CPU%"
-     exit 0
+    echo "OK - CPU Usage = $CPU%"
+    exit 0
 fi
 else
   echo "$0 - Nagios Plugin for checking CPU usage in a running docker container "

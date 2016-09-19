@@ -130,7 +130,7 @@ $ sudo ./check_container_memory.sh container -w 80 -c 95
 OK - MEMORY Usage = 4.82%
 
 $ sudo ./check_container_memory.sh container -w 80 -c 95
-CRITICAL - - MEMORY Usage = 96.79%
+CRITICAL - MEMORY Usage = 96.79%
 
 $ sudo ./check_container_memory.sh notexist -w 80 -c 95
 UNKNOWN - notexist does not exist.

@@ -69,9 +69,8 @@ function timemachine {
 function getevents {
 	mysql_exec="SELECT COUNT(*) FROM snorby.events_with_join WHERE sig_priority=1 AND timestamp >= '$FIXEDDATE';"
 	COUNT_LAST=`mysql --skip-column-names -h $SNORBY_DB_HOST -P $SNORBY_DB_PORT -u $SNORBY_DB_USER --password=$SNORBY_DB_PASS -e "$mysql_exec" $SNORBY_DB`
-
-	if [  "$COUNT_LAST" == 0 ]; then
-	    echo "OK - 0 High severity events in the defined interval"
+	if [ "$COUNT_LAST" == 0 ]; then
+		echo "OK - 0 High severity events in the defined interval"
 	else
 	    echo "CRITICAL - "$COUNT_LAST" High severity events in the defined interval"
 	fi
@@ -83,9 +82,9 @@ function getevents {
 
 integer='^[0-9]+$'
 
-    if ! [[ $2 =~ $integer ]] ; then
-       echo "UNKNOWN - set the time interval to a integer value" >&2; exit 1
-    else
-       timemachine
-       getevents
-    fi
+if ! [[ $2 =~ $integer ]] ; then
+	echo "UNKNOWN - set the time interval to a integer value" >&2; exit 1
+else
+	timemachine
+    getevents
+fi
