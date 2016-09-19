@@ -1,7 +1,7 @@
 #!/bin/bash
 #
 # Author: Antonino Abbate
-# Version: 1.3.1
+# Version: 1.3.2
 # License: GNU GENERAL PUBLIC LICENSE Version 3
 # 
 # -----------------------------------------------------------------------------------------------------
@@ -40,6 +40,7 @@
 #----------------------------------------------------------------------------------------------------------
 
 VERSION="$(docker -v | awk '{print $3}')"
+CLEANED_VERSION="${VERSION//,}"
 
 CONTAINER=$1
 
@@ -54,7 +55,7 @@ if [ $? -eq 1 ]; then
   exit 3
 fi
 
-if [ "$2" = "-w" ] && [ "$3" -gt "0" ] && [ "$4" = "-c" ] && [ "$5" -gt "0" ] ; then
+if [ "$2" = "-w" ] && [ "$3" -gt "0" ] && [ "$4" = "-c" ] && [ "$5" -gt "0" ]; then
   warn=$3
   crit=$5
 
@@ -62,10 +63,10 @@ if [ "$2" = "-w" ] && [ "$3" -gt "0" ] && [ "$4" = "-c" ] && [ "$5" -gt "0" ] ; 
 #   Check the container internal memory usage
 #----------------------------------------------------------------------------------------------------------
 
-  if  [$VERSION \< '1.9.%%'] && [$VERSION != '1.1*.%%']; then
-    MEMORY="$(docker stats --no-stream $CONTAINER | grep -A1 CONTAINER |grep -v CONTAINER | awk '{print $6}')"
-  else
+  if [ $CLEANED_VERSION \> "1.10.*" ]; then
     MEMORY="$(docker stats --no-stream $CONTAINER | grep -A1 CONTAINER |grep -v CONTAINER | awk '{print $8}')"
+  elif  [ $CLEANED_VERSION \< "1.9.*" ]; then
+    MEMORY="$(docker stats --no-stream $CONTAINER | grep -A1 CONTAINER |grep -v CONTAINER | awk '{print $6}')"
   fi
   if [ $warn -lt ${MEMORY%%.*} ]; then
     if [ $crit -lt ${MEMORY%%.*} ]; then
