@@ -1,7 +1,7 @@
 #!/bin/bash
 #
 # Author: Antonino Abbate
-# Version: 1.3
+# Version: 1.3.1
 # License: GNU GENERAL PUBLIC LICENSE Version 3
 # 
 # -----------------------------------------------------------------------------------------------------
@@ -62,23 +62,23 @@ if [ "$2" = "-w" ] && [ "$3" -gt "0" ] && [ "$4" = "-c" ] && [ "$5" -gt "0" ] ; 
 #   Check the container internal memory usage
 #----------------------------------------------------------------------------------------------------------
 
-  if [ $VERSION \< '1.9.%%' ] && [ $VERSION != '1.10.2,' ]; then
-   MEMORY="$(docker stats --no-stream $CONTAINER | grep -A1 CONTAINER |grep -v CONTAINER | awk '{print $6}')"
+  if  [$VERSION \< '1.9.%%'] && [$VERSION != '1.1*.%%']; then
+    MEMORY="$(docker stats --no-stream $CONTAINER | grep -A1 CONTAINER |grep -v CONTAINER | awk '{print $6}')"
   else
-   MEMORY="$(docker stats --no-stream $CONTAINER | grep -A1 CONTAINER |grep -v CONTAINER | awk '{print $8}')"
+    MEMORY="$(docker stats --no-stream $CONTAINER | grep -A1 CONTAINER |grep -v CONTAINER | awk '{print $8}')"
   fi
   if [ $warn -lt ${MEMORY%%.*} ]; then
-     if [ $crit -lt ${MEMORY%%.*} ]; then
-         echo "CRITICAL - Memory Usage = $MEMORY"
-         exit 2
-     else
-         echo "WARNING - MEMORY Usage = $MEMORY"
-         exit 1
-        fi
+    if [ $crit -lt ${MEMORY%%.*} ]; then
+      echo "CRITICAL - Memory Usage = $MEMORY"
+      exit 2
+    else
+      echo "WARNING - MEMORY Usage = $MEMORY"
+      exit 1
+  fi
   else
-     echo "OK - MEMORY Usage = $MEMORY"
-     exit 0
-fi
+    echo "OK - MEMORY Usage = $MEMORY"
+    exit 0
+  fi
 else
   echo "$0 - Nagios Plugin for checking MEMORY usage in a running docker container "
   echo ""
