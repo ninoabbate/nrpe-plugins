@@ -10,8 +10,11 @@ This is a collection of my custom NRPE compatible plugins.
 
 This script queries the Snorby (<https://github.com/Snorby/snorby>) database for High severity events in a time interval. The time interval is defined by `-i` argument, the accepted arguments are integer values. 
 
-Before executing the script you need to modify the database connection values defined inside the script.
+### Requirements
+* Access to Snorby database
+* Before executing the script you need to modify the database connection values defined inside the script
 
+### Usage
 ```
 ./check_snorby.sh -i <minutes>
 ```
@@ -57,6 +60,11 @@ define service{
 
 This script checks the docker container internal CPU usage, it retrieves the values using docker stats.
 
+### Requirements
+* Docker 1.5.0 or higher
+* The script requires sudo permissions due docker (this can be prevented if nrpe user is added to docker group)
+
+### Usage
 ```
 sudo ./check_container_cpu.sh <container name> -w <warning threshold> -c <critical threshold>
 ```
@@ -112,6 +120,11 @@ define service{
 
 This script checks the docker container internal Memory usage, it retrieves the values using docker stats.
 
+### Requirements
+* Docker 1.5.0 or higher
+* The script requires sudo permissions due docker (this can be prevented if nrpe user is added to docker group)
+
+### Usage
 ```
 sudo ./check_container_memory.sh <container name> -w <warning threshold> -c <critical threshold>
 ```
