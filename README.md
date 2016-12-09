@@ -5,6 +5,7 @@ This is a collection of my custom NRPE compatible plugins.
 - [check_snorby](https://github.com/ninoabbate/nrpe-plugins#check_snorby)
 - [check_container_cpu](https://github.com/ninoabbate/nrpe-plugins#check_container_cpu)
 - [check_container_memory](https://github.com/ninoabbate/nrpe-plugins#check_container_memory)
+- [check_avail_memory](https://github.com/ninoabbate/nrpe-plugins#check_avail_memory)
 
 ## check_snorby
 
@@ -45,7 +46,7 @@ UNKNOWN - set the time interval to a integer value
 ```
 command[check_snorby]=/usr/lib64/nagios/plugins/check_snorby.sh -i $ARG1$
 ```
-* Create the service check adding the following definition in a .cfg file on `/etc/nagios/conf.d/`
+* Create the service check adding the following definition in a .cfg file on `/etc/nagios/conf.d/` (or where your nagios services definitions are stored)
 ```
 define service{
         use                             service-template
@@ -105,7 +106,7 @@ nrpe        ALL=(ALL) NOPASSWD: /usr/lib64/nagios/plugins/check_container_cpu.sh
 ```
 command[check_container_cpu_usage]=sudo /usr/lib64/nagios/plugins/check_container_cpu.sh $ARG1$ -w $ARG2$ -c $ARG3$
 ```
-* Create the service check adding the following definition in a .cfg file on `/etc/nagios/conf.d/`
+* Create the service check adding the following definition in a .cfg file on `/etc/nagios/conf.d/` (or where your nagios services definitions are stored)
 ```
 define service{
         use                             service-template
@@ -165,7 +166,7 @@ nrpe        ALL=(ALL) NOPASSWD: /usr/lib64/nagios/plugins/check_container_memory
 ```
 command[check_container_memory_usage]=sudo /usr/lib64/nagios/plugins/check_container_memory.sh $ARG1$ -w $ARG2$ -c $ARG3$
 ```
-* Create the service check adding the following definition in a .cfg file on `/etc/nagios/conf.d/`
+* Create the service check adding the following definition in a .cfg file on `/etc/nagios/conf.d/` (or where your nagios services definitions are stored)
 ```
 define service{
         use                             service-template
@@ -173,6 +174,48 @@ define service{
         host_name                       hostname
         service_description             Container Memory
         check_command                   check_nrpe!check_container_memory_usage!container!80!95
+}
+```
+## check_avail_memory
+
+This script checks the available memory on a Linux system. 
+
+### Requirements
+* Nothing special, tools already bundled on every Linux system.
+
+### Usage
+```
+./check_avail_memory.sh -w <warning threshold> -c <critical threshold>
+```
+
+### Output
+```
+OK       - if the available memory is above the warning and critical thresholds
+WARNING  - if the available memory is under the warning threshold and it is above the critical threshold
+CRITICAL - if the available memory is under the critical threshold
+```
+
+### Example
+```
+$ ./check_avail_memory.sh -w 10 -c 5
+OK - Available Memory = 89%
+```
+
+### Configuration in Nagios
+
+* Copy the script to your nagios plugin directory (usually `/usr/lib64/nagios/plugins/`)
+* Create the NRPE command, adding the following line to `/etc/nagios/nrpe.cfg`
+```
+command[check_avail_memory]=/usr/lib64/nagios/plugins/check_avail_memory.sh -w $ARG1$ -c $ARG2$
+```
+* Create the service check adding the following definition in a .cfg file on `/etc/nagios/conf.d/` (or where your nagios services definitions are stored)
+```
+define service{
+        use                             service-template
+        name                            Available Memory
+        host_name                       hostname
+        service_description             Available Memory
+        check_command                   check_nrpe!check_avail_memory!10!5
 }
 ```
 
