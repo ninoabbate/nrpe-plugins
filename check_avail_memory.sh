@@ -1,7 +1,7 @@
 #!/bin/bash
 #
 # Author: Antonino Abbate
-# Version: 1.0
+# Version: 1.1
 # License: GNU GENERAL PUBLIC LICENSE Version 3
 # 
 # -----------------------------------------------------------------------------------------------------------
@@ -49,13 +49,13 @@ if [ "$1" = "-w" ] && [ "$2" -lt "101" ] && [ "$3" = "-c" ] && [ "$4" -lt "101" 
   AVAILMEMPERC=$(awk "BEGIN { perc=100*${AVAILABLEMEM}/${TOTALMEM}; i=int(perc); print (perc-i<0.5)?i:i+1 }")
 
   if [ ${AVAILMEMPERC} -gt $warn ] && [ ${AVAILMEMPERC} -gt $crit ];then
-    echo "OK - Available Memory = $AVAILMEMPERC%"
+    echo "OK - Available Memory = $AVAILMEMPERC% | Available memory=$AVAILMEMPERC%;$warn;$crit;0;100"
     exit 0
   elif [ ${AVAILMEMPERC} -lt $warn ] && [ ${AVAILMEMPERC} -gt $crit ]; then
-    echo "WARNING - Available Memory = $AVAILMEMPERC%"
+    echo "WARNING - Available Memory = $AVAILMEMPERC% | Available memory=$AVAILMEMPERC%;$warn;$crit;0;100"
     exit 1
   else
-    echo "CRITICAL - Available Memory = $AVAILMEMPERC%"
+    echo "CRITICAL - Available Memory = $AVAILMEMPERC% | Available memory=$AVAILMEMPERC%;$warn;$crit;0;100"
     exit 2
   fi
 else
