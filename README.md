@@ -81,10 +81,10 @@ UNKNOWN  - if the container does not exist
 ### Examples
 ```
 $ sudo ./check_container_cpu.sh container -w 80 -c 95
-OK - CPU Usage = 7%
+OK - CPU Usage = 7% | CPU Usage=7%;80;95;0;100
 
 $ sudo ./check_container_cpu.sh container -w 80 -c 95
-CRITICAL - CPU Usage = 97%
+CRITICAL - CPU Usage = 97% | CPU Usage=97%;80;95;0;100
 
 $ sudo ./check_container_cpu.sh notexist -w 80 -c 95
 UNKNOWN - notexist does not exist.
@@ -141,10 +141,10 @@ UNKNOWN  - if the container does not exist
 ### Examples
 ```
 $ sudo ./check_container_memory.sh container -w 80 -c 95
-OK - MEMORY Usage = 4.82%
+OK - MEMORY Usage = 4.82% | Memory Usage=0.05%;80;95;0;100
 
 $ sudo ./check_container_memory.sh container -w 80 -c 95
-CRITICAL - MEMORY Usage = 96.79%
+CRITICAL - MEMORY Usage = 96.79% | Memory Usage=96.79%;80;95;0;100
 
 $ sudo ./check_container_memory.sh notexist -w 80 -c 95
 UNKNOWN - notexist does not exist.
@@ -198,7 +198,7 @@ CRITICAL - if the available memory is under the critical threshold
 ### Example
 ```
 $ ./check_avail_memory.sh -w 10 -c 5
-OK - Available Memory = 89%
+OK - Available Memory = 89% | Available memory=89%;10;5;0;100
 ```
 
 ### Configuration in Nagios

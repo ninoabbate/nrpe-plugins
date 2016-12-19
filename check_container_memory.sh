@@ -1,7 +1,7 @@
 #!/bin/bash
 #
 # Author: Antonino Abbate
-# Version: 1.3.2
+# Version: 1.4
 # License: GNU GENERAL PUBLIC LICENSE Version 3
 # 
 # -----------------------------------------------------------------------------------------------------
@@ -64,20 +64,20 @@ if [ "$2" = "-w" ] && [ "$3" -gt "0" ] && [ "$4" = "-c" ] && [ "$5" -gt "0" ]; t
 #----------------------------------------------------------------------------------------------------------
 
   if [ $CLEANED_VERSION \> "1.10.*" ]; then
-    MEMORY="$(docker stats --no-stream $CONTAINER | grep -A1 CONTAINER |grep -v CONTAINER | awk '{print $8}')"
+    MEMORY="$(docker stats --no-stream $CONTAINER | grep -A1 CONTAINER | grep -v CONTAINER | awk '{print $8}')"
   elif  [ $CLEANED_VERSION \< "1.9.*" ]; then
-    MEMORY="$(docker stats --no-stream $CONTAINER | grep -A1 CONTAINER |grep -v CONTAINER | awk '{print $6}')"
+    MEMORY="$(docker stats --no-stream $CONTAINER | grep -A1 CONTAINER | grep -v CONTAINER | awk '{print $6}')"
   fi
   if [ $warn -lt ${MEMORY%%.*} ]; then
     if [ $crit -lt ${MEMORY%%.*} ]; then
-      echo "CRITICAL - Memory Usage = $MEMORY"
+      echo "CRITICAL - Memory Usage = $MEMORY | Memory Usage=$MEMORY;$warn;$crit;0;100"
       exit 2
     else
-      echo "WARNING - MEMORY Usage = $MEMORY"
+      echo "WARNING - MEMORY Usage = $MEMORY | Memory Usage=$MEMORY;$warn;$crit;0;100"
       exit 1
   fi
   else
-    echo "OK - MEMORY Usage = $MEMORY"
+    echo "OK - MEMORY Usage = $MEMORY | Memory Usage=$MEMORY;$warn;$crit;0;100"
     exit 0
   fi
 else

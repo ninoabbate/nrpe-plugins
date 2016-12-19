@@ -1,7 +1,7 @@
 #!/bin/bash
 #
 # Author: Antonino Abbate
-# Version: 1.1
+# Version: 1.2
 # License: GNU GENERAL PUBLIC LICENSE Version 3
 # 
 # -----------------------------------------------------------------------------------------------------
@@ -41,7 +41,7 @@
 
 CONTAINER=$1
 
-CPUCORES=$(docker info |grep CPUs |awk '{print $2}')
+CPUCORES=$(docker info | grep CPUs | awk '{print $2}')
 
 RUNNING=$(docker inspect --format="{{ .State.Running }}" $CONTAINER 2> /dev/null)
 
@@ -62,20 +62,20 @@ if [ "$2" = "-w" ] && [ "$3" -gt "0" ] && [ "$4" = "-c" ] && [ "$5" -gt "0" ] ; 
 #   Check the container internal cpu usage
 #----------------------------------------------------------------------------------------------------------
 
-  CPUUSAGE="$(docker stats --no-stream $CONTAINER | grep -A1 CONTAINER |grep -v CONTAINER | awk '{print $2}')"
+  CPUUSAGE="$(docker stats --no-stream $CONTAINER | grep -A1 CONTAINER | grep -v CONTAINER | awk '{print $2}')"
 
   CPU=$(expr ${CPUUSAGE%%.*} / ${CPUCORES})
 
   if [ $warn -lt ${CPU%%.*} ];then
     if [ $crit -lt ${CPU%%.*} ]; then
-      echo "CRITICAL - CPU Usage = $CPU%"
+      echo "CRITICAL - CPU Usage = $CPU% | CPU Usage=$CPU%;$warn;$crit;0;100"
       exit 2
     else
-      echo "WARNING - CPU Usage = $CPU%"
+      echo "WARNING - CPU Usage = $CPU% | CPU Usage=$CPU%;$warn;$crit;0;100"
       exit 1
     fi
   else
-    echo "OK - CPU Usage = $CPU%"
+    echo "OK - CPU Usage = $CPU% | CPU Usage=$CPU%;$warn;$crit;0;100"
     exit 0
 fi
 else
