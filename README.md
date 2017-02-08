@@ -6,6 +6,7 @@ This is a collection of my custom NRPE compatible plugins.
 - [check_container_cpu](https://github.com/ninoabbate/nrpe-plugins#check_container_cpu)
 - [check_container_memory](https://github.com/ninoabbate/nrpe-plugins#check_container_memory)
 - [check_avail_memory](https://github.com/ninoabbate/nrpe-plugins#check_avail_memory)
+- [check_docker_dataspace](https://github.com/ninoabbate/nrpe-plugins#check_docker_dataspace)
 
 ## check_snorby
 
@@ -42,7 +43,7 @@ UNKNOWN - set the time interval to a integer value
 ### Configuration in Nagios
 
 * Copy the script to your nagios plugin directory (usually `/usr/lib64/nagios/plugins/`)
-* Create the NRPE command, adding the following line to `/etc/nagios/nrpe.cfg`
+* Create the NRPE command, adding the following line to `/etc/nagios/nrpe.cfg` (or where your nrpe definitions are stored)
 ```
 command[check_snorby]=/usr/lib64/nagios/plugins/check_snorby.sh -i $ARG1$
 ```
@@ -102,7 +103,7 @@ $ sudo visudo
 # Enable nagios to run restricted root checks
 nrpe        ALL=(ALL) NOPASSWD: /usr/lib64/nagios/plugins/check_container_cpu.sh
 ```
-* Create the NRPE command, adding the following line to `/etc/nagios/nrpe.cfg`
+* Create the NRPE command, adding the following line to `/etc/nagios/nrpe.cfg` (or where your nrpe definitions are stored)
 ```
 command[check_container_cpu_usage]=sudo /usr/lib64/nagios/plugins/check_container_cpu.sh $ARG1$ -w $ARG2$ -c $ARG3$
 ```
@@ -162,7 +163,7 @@ $ sudo visudo
 # Enable nagios to run restricted root checks
 nrpe        ALL=(ALL) NOPASSWD: /usr/lib64/nagios/plugins/check_container_memory.sh
 ```
-* Create the NRPE command, adding the following line to `/etc/nagios/nrpe.cfg`
+* Create the NRPE command, adding the following line to `/etc/nagios/nrpe.cfg` (or where your nrpe definitions are stored)
 ```
 command[check_container_memory_usage]=sudo /usr/lib64/nagios/plugins/check_container_memory.sh $ARG1$ -w $ARG2$ -c $ARG3$
 ```
@@ -204,7 +205,7 @@ OK - Available Memory = 89% | Available memory=89%;10;5;0;100
 ### Configuration in Nagios
 
 * Copy the script to your nagios plugin directory (usually `/usr/lib64/nagios/plugins/`)
-* Create the NRPE command, adding the following line to `/etc/nagios/nrpe.cfg`
+* Create the NRPE command, adding the following line to `/etc/nagios/nrpe.cfg` (or where your nrpe definitions are stored)
 ```
 command[check_avail_memory]=/usr/lib64/nagios/plugins/check_avail_memory.sh -w $ARG1$ -c $ARG2$
 ```
@@ -216,6 +217,59 @@ define service{
         host_name                       hostname
         service_description             Available Memory
         check_command                   check_nrpe!check_avail_memory!10!5
+}
+```
+## check_docker_dataspace
+
+This script checks the diskspace available to docker daemon. 
+
+### Requirements
+* docker 1.12 or lower. (This script doesn't work with docker 1.13 due different `docker info` command output).
+* The script requires sudo permissions due docker (this can be prevented if nrpe user is added to docker group)
+
+### Usage
+```
+sudo ./check_docker_dataspace.sh -w <warning threshold> -c <critical threshold>
+```
+
+### Output
+```
+OK       - if the available disk space is under the warning and critical thresholds
+WARNING  - if the available disk space is equal or over the warning threshold and it is under the critical threshold
+CRITICAL - if the available disk space is equal or over the critical threshold
+UNKNOWN  - if the docker daemon isn't running
+```
+
+### Example
+```
+$ ./check_docker_dataspace.sh -w 20 -c 15
+OK - Available Data Space = 96% | Available space=96%;20;15;0;100
+```
+
+### Configuration in Nagios
+
+* Copy the script to your nagios plugin directory (usually `/usr/lib64/nagios/plugins/`)
+* This plugin needs sudo, so edit the sudoers config file as follow
+```
+$ sudo visudo
+
+#Defaults    requiretty
+
+# Enable nagios to run restricted root checks
+nrpe        ALL=(ALL) NOPASSWD: /usr/lib64/nagios/plugins/check_docker_dataspace.sh
+```
+* Create the NRPE command, adding the following line to `/etc/nagios/nrpe.cfg` (or where your nrpe definitions are stored)
+```
+command[check_docker_dataspace]=sudo /usr/lib64/nagios/plugins/check_docker_dataspace.sh -w $ARG1$ -c $ARG2$
+```
+* Create the service check adding the following definition in a .cfg file on `/etc/nagios/conf.d/` (or where your nagios services definitions are stored)
+```
+define service{
+        use                             service-template
+        name                            Docker data space
+        host_name                       hostname
+        service_description             Docker data space
+        check_command                   check_nrpe!check_docker_dataspace!10!5
 }
 ```
 
